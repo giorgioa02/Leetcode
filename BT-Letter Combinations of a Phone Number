@@ -1,0 +1,45 @@
+"""
+17. Letter Combinations of a Phone Number
+Backtracking
+"""
+
+class Solution(object):
+    def letterCombinations(self, digits):
+        """
+        :type digits: str
+        :rtype: List[str]
+        """
+
+        #basecase: input empty string
+        if digits == "":
+            return []
+
+        #mapping of digits to their corresponding letters
+        map = {
+            '2': 'abc', 
+            '3': 'def', 
+            '4': 'ghi', 
+            '5': 'jkl', 
+            '6': 'mno', 
+            '7': 'pqrs', 
+            '8': 'tuv', 
+            '9': 'wxyz'
+        }
+
+        #result array
+        result = []
+
+        #backtrack function
+        self.backtrack("", digits, map, result)
+        return result
+        
+    def backtrack(self, combination, next_digits, map, result):
+        #if there are no more digits to check, the current combination is complete
+        if len(next_digits) == 0:
+            #add the complete combination to the result list
+            result.append(combination)
+        else:
+            #process the next digit, retrieving the corresponding letters from the map
+            for i in map[next_digits[0]]:
+                #recursively build the combination by adding the current letter and moving to the next digit
+                self.backtrack(combination + i, next_digits[1:], map, result)
