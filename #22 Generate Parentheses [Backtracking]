@@ -1,0 +1,36 @@
+"""
+22. Generate Parentheses
+Backtracking
+"""
+
+class Solution(object):
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+
+        #iniitialize list to store all valid combinations
+        result = []
+
+        def backtrack(current_string, open_count, closed_count):
+            #basecase: # of open and closed parentheses both reach n
+            #valid combination if open ( == closed ) == n
+            if open_count == closed_count == n:
+                result.append(current_string)
+                return 
+
+            #recursive case: # of open parentheses is less than n
+            #add open ( if open < n
+            if open_count < n:
+                backtrack(current_string + "(", open_count + 1, closed_count)
+
+            #recursive case: # of closed parentheses is less than # of open parentheses
+            #add closing ) if closed < open
+            if closed_count < open_count:
+                backtrack(current_string + ")", open_count, closed_count + 1)
+
+        #backtrack with an empty string, 0 open, and 0 closed
+        backtrack("", 0,0)
+        #return list containing all valid combinations
+        return result
