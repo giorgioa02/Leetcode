@@ -1,0 +1,40 @@
+"""
+39. Combination Sum
+Backtracking
+"""
+
+class Solution(object):
+    def combinationSum(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+
+        result = []
+
+        def dfs(i, current, total):
+            #basecase: if the current sum equals the target it's a valid combination
+            if total == target:
+                result.append(current[:]) #append a copy of the current combination to the result
+                return
+        
+            #basecase: impossible to find combination - i is out of bounds or current sum exceeds the target
+            if i >= len(candidates) or total > target:
+                return
+
+            #recursion:
+            #include candidates[i] in the current combination
+            current.append(candidates[i])
+            #recur by keeping the same index 'i' to allow the same number to be reused
+            dfs(i, current, total + candidates[i])
+
+            #backtrack: remove the last number added to explore other combinations
+            #can't include candidates[i] in the current combination
+            current.pop()
+            #recur by moving to the next index 'i+1' to try the next candidate
+            dfs(i+1, current, total)
+
+        #start the DFS with the first candidate, an empty combination, and a total sum of 0
+        dfs(0, [], 0)
+        return result
