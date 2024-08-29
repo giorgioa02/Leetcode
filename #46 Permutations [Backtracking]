@@ -1,0 +1,29 @@
+"""
+46. Permutations
+Backtracking
+"""
+
+class Solution(object):
+    def permute(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+  
+        result = []
+
+        def backtrack(start, end):
+            #basecase: 1 value
+            if start == end:
+                result.append(nums[:])
+
+            for i in range(start, end):
+                #swap the current element with the start element
+                nums[start], nums[i] = nums[i], nums[start]
+                #recurse on the next part of the list
+                backtrack(start + 1, end)
+                #backtrack (undo the swap)
+                nums[start], nums[i] = nums[i], nums[start]
+        
+        backtrack(0, len(nums))
+        return result
