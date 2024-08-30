@@ -1,0 +1,34 @@
+"""
+78. Subsets
+Backtracking
+"""
+
+class Solution(object):
+    def subsets(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+
+        result = []
+
+        #DFS helper function
+        def dfs(i, subset):
+            #basecase: out of bounds or considered all elements in nums
+            if i >= len(nums):
+                #add a copy of the current subset to the result list
+                result.append(subset[:])
+                return
+
+            #decision 1: include nums[i] in the current subset
+            subset.append(nums[i])
+            dfs(i+1, subset) #recurse to the next element with nums[i] included
+
+            #decision 2: exclude nums[i] from the current subset
+            subset.pop() #backtrack by removing the last element added (nums[i])
+            dfs(i+1, subset) #recurse to the next element without nums[i]
+
+        #start DFS with an empty subset and the 0th index
+        dfs(0, [])
+        return result
+        
