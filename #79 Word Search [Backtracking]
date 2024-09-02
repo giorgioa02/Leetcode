@@ -1,0 +1,48 @@
+"""
+79. Word Search
+Backtracking
+"""
+
+class Solution(object):
+    def exist(self, board, word):
+        """
+        :type board: List[List[str]]
+        :type word: str
+        :rtype: bool
+        """
+        #get the number of rows and columns in the board
+        rows = len(board)
+        cols = len(board[0])
+        #set to keep track of the path (cells already visitied in the current DFS path)
+        path = set()
+
+        #DFS to explore all possible paths
+        def dfs(row, col, i):
+            #if all characters in the word have been matched, return true
+            if i == len(word):
+                return True
+            #if out of bounds, character doesn't match, or cell is already in the path, return False
+            if (row < 0 or col < 0 or 
+                row >= rows or col >= cols or 
+                word[i] != board[row][col] or
+                (row, col) in path):
+                return False
+            
+            #add the current cell to the path
+            path.add((row, col))
+            #explore all four possible directions (down, up, right, left)
+            res = ( dfs(row + 1, col, i + 1) or
+                    dfs(row - 1, col, i + 1) or 
+                    dfs(row, col + 1, i + 1) or
+                    dfs(row, col - 1, i + 1) )
+
+            #backtrack: remove the current cell from the path before returning
+            path.remove((row, col))
+            return res
+
+        #start DFS from each cell in the grid
+        for r in range(rows):
+            for c in range(cols):
+                #if the word can be found, return True
+                if dfs(r, c, 0): return True
+        return False
