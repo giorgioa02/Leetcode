@@ -1,0 +1,42 @@
+"""
+131. Palindrome Partitioning
+Backtracking
+"""
+
+class Solution(object):
+    def partition(self, s):
+        """
+        :type s: str
+        :rtype: List[List[str]]
+        """
+
+        result = [] #stores all possible palindrome partitions
+        currPart = [] #temp list to store the current partition being explored
+
+        #DFS helper function to explore all partitions: i is the index of the current character in the string
+        def dfs(i):
+            #basecase: if the index i is out of bounds, we have a complete partition
+            if i >= len(s):
+                result.append(currPart[:]) #append a copy of the current partition to the result
+                return
+            
+            #iterate through the substring starting from index i to the end of the string
+            for j in range(i, len(s)):
+                #check if every possible substring is a palindrome
+                if self.isPalindrome(s, i, j):
+                    #add string to partition if it is a palindrome
+                    currPart.append(s[i:j+1])
+                    #recursively execute DFS to look for additional palindromes
+                    dfs(j + 1)
+                    #backtrack: remove the last added substring to explore a new partition
+                    currPart.pop()
+        dfs(0) #start the DFS with the first character of the string
+        return result
+
+    #helper function to determine if a substring is a palindrome
+    def isPalindrome(self, s, start, end):
+        while start < end: #check the characters from start to end, moving inward
+            if s[start] != s[end]: #if characters don't match, it's not a palindrome
+                return False
+            start, end = start + 1, end - 1 #move pointers closer to the center
+        return True #if characters match, it's a palindrome
