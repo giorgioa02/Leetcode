@@ -1,0 +1,49 @@
+"""
+51. N-Queens
+Backtracking
+"""
+
+class Solution(object):
+    def solveNQueens(self, n):
+        """
+        :type n: int
+        :rtype: List[List[str]]
+        """
+
+        #initialize sets to track columns, positive diagnols, and negative diagnols
+        #these sets will ensure no two queens are place in the same column or diagnol
+        cols = set()
+        posDiags = set() #(row + column)
+        negDiags = set() #(row - column) 
+
+        result = [] #all possible n-queen solutions
+        board = [["."] * n for i in range(n)] #initialize board: a "." is an empty location
+
+        #backtracking function that tries to place queens row by row (r)
+        def backtrack(r):
+            #basecase: all rows have been filled = valid n-queen solution
+            if r == n:
+                result.append(["".join(r) for r in board]) #convert the board configuartion into a list of strings and store it
+                return
+
+            #iterate over each column in the current row 'r'
+            for c in range(n):
+                #queen position not allowed: skip if column or diagnol already has a queen
+                if c in cols or (r + c) in posDiags or (r-c) in negDiags:
+                    continue
+
+                #queen position allowed: mark the column and diagnols as occupied by placing a queen
+                cols.add(c)
+                posDiags.add(r + c)
+                negDiags.add(r - c)
+                board[r][c] = "Q" #update board: place the queen on the board at row 'r' and column 'c' instead of a dot
+                backtrack(r + 1) #backtrack: move to the next row by making a recursive call
+
+                #backtracking cleanup: undo all for next iteration in the loop (to check for other possible solutions)
+                cols.remove(c)
+                posDiags.remove(r + c)
+                negDiags.remove(r - c)
+                board[r][c] = "."
+
+        backtrack(0) #backtrack from the first row (row 0)
+        return result   
