@@ -1,0 +1,58 @@
+"""
+104. Maximum Depth of Binary Tree
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+
+        #-------------------------------------------------------------------------------------------------------------#
+        #recursive DFS:
+        '''
+        if not root: return 0 #basecase: if the root is None, the depth is 0
+        #recursively find the max depth between left and right subtrees, and add 1 for the root node
+        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+        '''
+        #-------------------------------------------------------------------------------------------------------------#
+                                    #two ways without recursion: iterative DFS or BFS
+        #-------------------------------------------------------------------------------------------------------------#
+        #iterative DFS:
+        '''
+        node_stack = [(root, 1)] #using tuple to simulate a stack for efficiency in Python
+        result = 0
+        #process nodes in a LIFO order, simulating DFS
+        while node_stack: 
+            node, depth = node_stack.pop() #pop the last node and its depth from the stack
+
+            if node: #if the node is not None, process it
+                result = max(result, depth)
+                node_stack.append((node.left, depth + 1)) #push left child and its depth onto the stack (if it exists)
+                node_stack.append((node.right, depth + 1)) #push right child and its depth onto the stack (if it exists)
+        return result
+        '''
+        #-------------------------------------------------------------------------------------------------------------#
+        #BFS:
+        if not root: return 0 #edge case: tree is empty
+        level = 0
+        q = deque([root]) #queue for level-order BFS traversal, starting with the root node
+        #loop until queue is empty (no more nodes to process)
+        while q:
+            #traverse a level and add next level
+            for i in range(len(q)):
+                node = q.popleft() #dequeue the next node for processing
+                if node.left: q.append(node.left) #if the node has a left child, enqueue it for the next level
+                if node.right: q.append(node.right) #if the node has a right child, enqueue it for the next level
+            level += 1 #increment the level counter
+        return level
+        #-------------------------------------------------------------------------------------------------------------#
