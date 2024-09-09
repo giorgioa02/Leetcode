@@ -1,0 +1,36 @@
+"""
+543. Diameter of Binary Tree
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        
+        #member variable of class -> initialize the diameter
+        self.diameter = 0
+
+        #helper function to calculate height of the tree and update the diameter
+        def calculateHeight(node: Optional[TreeNode]) -> int:
+            #basecase: if null node (empty) height is zero
+            if not node: return 0
+
+            #recursively find the height of left and right subtree
+            left = calculateHeight(node.left)
+            right = calculateHeight(node.right)
+
+            #update the diameter(maximum path length between two leaf nodes)
+            self.diameter = max(self.diameter, left + right)
+            #return the height of the current subtree + 1
+            return 1 + max(left, right) 
+
+        #recursive height calculation
+        calculateHeight(root)
+        #final calculated diameter
+        return self.diameter
