@@ -1,0 +1,57 @@
+"""
+94. Binary Tree Inorder Traversal
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        #initialize an empty list to store the result of the inorder traversal
+        result = []
+
+        #-------------------------------------------------------------------------------------------------------------#
+        #recursive solution
+        
+        #nested helper function to perform inorder traversal
+        def inorder(root):
+            #basecase: if current node is null (doesn't exist), return (end recursion for this path)
+            if not root: return 
+            #recursive call to traverse the left subtree
+            inorder(root.left)
+            #visit the current node (add the node's value to the result list)
+            result.append(root.val)
+            #recursive call to traverse the right subtree
+            inorder(root.right)
+        #start inorder traversal from root node
+        inorder(root)
+        return result
+        
+        #-------------------------------------------------------------------------------------------------------------#
+        #iterative solution
+        """
+        #initialize an empty stack to simulate the system's call stack
+        stack = []
+        #start with the root node as the current pointer
+        current = root
+
+        #continue loop while there are nodes to be processed or nodes in the stack
+        while current or stack:
+            #traverse as far left as possible, pushing nodes onto the stack
+            while current:
+                stack.append(current)
+                current = current.left
+            #pop the node from the top of the stack (process it as we return from left subtree)
+            current = stack.pop()
+            #append the node's value to the result list
+            result.append(current.val)
+            #move to the right subtree and repeat the process
+            current = current.right
+        return result
+        """
+        #-------------------------------------------------------------------------------------------------------------#
