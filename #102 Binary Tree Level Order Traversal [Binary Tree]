@@ -1,0 +1,35 @@
+"""
+102. Binary Tree Level Order Traversal 
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+
+        result = [] #initialize an empty list to store the final result of each level's values
+        q = collections.deque() #initialize a queue to hold nodes to be processed
+        q.append(root) #append the root node to the queue to start
+
+        #perform a BFS until there are no more nodes in the queue
+        while q:
+            level = [] #list to hold all values at the current level
+            #process all nodes at the current level: number of nodes at the current level is equivalent to the current length of the queue
+            for i in range(len(q)):
+                node = q.popleft() #pop the node from the front of the queue
+                #if node is not None, process it
+                if node:
+                    level.append(node.val) #add the node's value to the current level list
+                    q.append(node.left) #append the left children to the queue for the next level
+                    q.append(node.right) #append the right children to the queue for the next level
+            #only append the level list to the result if it contains any valid values
+            #prevents adding empty levels that may occur when null nodes are added
+            if level: 
+                result.append(level)
+        return result
