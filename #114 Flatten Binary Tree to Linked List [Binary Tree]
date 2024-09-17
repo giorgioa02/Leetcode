@@ -1,0 +1,50 @@
+"""
+114. Flatten Binary Tree to Linked List
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def flatten(self, root: Optional[TreeNode]) -> None:
+        """
+        Do not return anything, modify root in-place instead.
+        """
+
+        #flatten the root tree and return the list tail
+        def dfs(root):
+            #basecase: if the current node is None (null): return None (empty subtree)
+            if not root: return None
+
+            #recursive case: flatten the left and right subtrees
+            #the tail refers to the rightmost node of a flattened subtree
+            leftTail = dfs(root.left) #flatten the left subtree and get its tail
+            rightTail = dfs(root.right) #flatten the right subtree and get its tail
+
+            #connect linked list:
+            #only edge case: one of the lists are empty
+                #right list empty: move left to right 
+                #left list empty: nothing - left is already null
+                #left list is non-null - the only case where we do an insert operation (below):
+
+            #if there is a left subtree, we need to rearrange it
+            if leftTail:
+                #order is important
+                #the current node's right child become the right child of the left tail
+                leftTail.right = root.right #attach the right subtree after the left subtree
+                root.right = root.left #move the flattened left subtree to the right
+                root.left = None #set left child to None, as required
+            
+            #the tail of the current subtree is either:
+                #the right tail - if it exists
+                #the left tail - if the right tail is None
+                #the root itsef - if both are None (left and right subtree are empty)
+            return rightTail or leftTail or root
+
+        #initialize the flattening process from the root
+        dfs(root)
