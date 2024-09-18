@@ -1,0 +1,32 @@
+"""
+98. Validate Binary Search Tree
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+
+        #helper function: validates the BST by checking if the current node's value is within the valid range (left, right)
+        def valid(node, left, right):
+            #basecase: if we reach a null node, the path is valid - an empty tree is still a valid BST
+            if not node: return True
+
+            #check if the current node's value is within the valid range (left, node value, right)
+            #if not, the BST property is violated at this node
+            if not (left < node.val < right): return False
+        
+            #recursive call: recursively check the left and right subtrees:
+            #for the left subtree, the upper bound (right) is updated to the current node's value (since all values must be smaller)
+            #for the right subtree, the lower bound (left) is updated to the current node's value (since all values must be greater)
+            return (valid(node.left, left, node.val) and #ensure left subtree is valid
+            valid(node.right, node.val, right)) #ensure right subtree is valid
+
+        #start with the root and the initial range of (-infinity, +infinity), as there are no boundaries for the root node
+        return valid(root, float('-inf'), float('inf'))
