@@ -1,0 +1,39 @@
+"""
+101. Symmetric Tree
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def isSymmetric(self, root: Optional[TreeNode]) -> bool:
+
+        #helper function: uses DFS to recursively check if two subtrees are mirrors of each other
+        def dfs(left: Optional[TreeNode], right: Optional[TreeNode]) -> bool:
+            #basecase: if both nodes are null, tree is symmetric
+            if not left and not right: 
+                return True
+
+            #basecase: if one of the nodes is null, tree is not symmetric
+            if not left or not right:
+                return False
+
+            #if neither of these are true: both of the nodes are non-null (continue down)
+
+
+            #compare the current nodes and their respective subtrees
+            #1. check if the current nodes' values are equal and
+            #recursively check if:
+                #2. the left subtree of the left node is a mirror of the right subtree of the right node and
+                #3. the right subtree of the left node is a mirror of the left subtree of the right node 
+            return (left.val == right.val and
+            dfs(left.left, right.right) and #compare the outer subtrees
+            dfs(left.right, right.left)) #compare the inner subtrees
+
+        #start recursion from the root's left and right children to check symmetry
+        return dfs(root.left, root.right)
