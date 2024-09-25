@@ -1,0 +1,37 @@
+"""
+199. Binary Tree Right Side View
+Binary Treeleet
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+
+        result = [] #initialize an empty list to store the right side view nodes
+        q = collections.deque([root]) #initialize a queue to perform level-order traversal (BFS) starting with the root node
+
+        #while the queue is not empty (there are nodes) continue the loop
+        while q:
+            rightSide = None  #initialize rightSide to None at the start of each level (stores rightmost node of the current level)
+            qLen = len(q) #get the number of nodes at the current level
+
+            #iterate through each node at the current level
+            for i in range(qLen):
+                node = q.popleft() #pop the leftmost node from the queue
+                
+                #if the node exists, update the rightSide to the current node
+                if node: 
+                    rightSide = node 
+                    q.append(node.left) #add the node's left child to the queue (if it exists)
+                    q.append(node.right) #add the node's right child to the queue (if it exists)
+            
+            #append the rightmost node of the level 
+            if rightSide:
+                result.append(rightSide.val)
+        return result #return right side view of the tree
