@@ -1,0 +1,36 @@
+"""
+230. Kth Smallest Element in a BST
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+
+        n = 0 #tracks how many nodes has been visited so far
+        stack = [] #stack used to simulate the recursive in-order traversal process
+        current = root #pointer to the node currently being processed
+
+        #iterate until all nodes are processed (either current node exists or stack is not empty)
+        while current or stack:
+            #traverse the left subtree by going to the leftmost node
+            #at end of this loop current should be pointing to a null node
+            while current: 
+                stack.append(current) #push the current node onto the stack
+                current = current.left #move to the left child
+            
+            #pop the node from the stack once there's no left child
+            current = stack.pop() #this node is now the next in in-order sequence
+            n += 1 #increment the count of visited nodes
+
+            #if the current node is the k-th smallest, return its value
+            if n == k:
+                return current.val #return the k-th smallest element in the BST
+            #if not, move to the right subtree to continue the in-order traversal
+            current = current.right #set current to the right child of the node
