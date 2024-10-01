@@ -1,0 +1,28 @@
+"""
+236. Lowest Common Ancestor of a Binary Tree
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        #base cases: if the current node is None, or if it is p or q
+        if not root or root == p or root == q:
+            return root
+
+        left = self.lowestCommonAncestor(root.left, p, q) #recursively search the left subtree for p and q
+        right = self.lowestCommonAncestor(root.right, p, q) #recursively search the right subtree for p and q
+
+        #if both left and right are non-null, p was found in one subtree and q was found in the other subtree
+        if left and right: 
+            return root #the current node (root) is the LCA of p and q
+
+        #if only one of the recursive calls returned a non-null result, both p and q were found in the same subtree
+        #the non-null return value is the LCA
+        return left if left else right #if left is non-null, return left; otherwise, return right
