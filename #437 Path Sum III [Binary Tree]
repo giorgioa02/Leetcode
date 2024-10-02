@@ -1,0 +1,38 @@
+"""
+437. Path Sum III
+Binary Tree
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:
+
+        #store the cumulative sum we have seen so far and how many times each sum has occurred along the current dfs search
+        sums =  defaultdict(int) #initializes all keys with a value of 0 by default
+        sums[0] = 1 #initialize the sum 0 to 1, because a path that starts from the root (or any node)
+
+        #dfs helper function that will recursively traverse the tree using DFS
+        def dfs_helper(node: Optional[TreeNode], current_sum: int) -> int:
+            if not node: return 0 #basecase: if the node is None return 0 (no more paths to explore)
+            current_sum += node.val #update the current cumulative sum by adding the value of the current node
+
+            #calculate the number of valid paths that end at the current node by checking how many times we've seen (current_sum - targetSum) before
+            paths = sums[current_sum - targetSum] #if we have seen it, there is a path from an ancestor node to the current node with a sum equal to targetSum
+            sums[current_sum] += 1 #update the hashmap by adding the current cumulative sum
+
+            paths += dfs_helper(node.left, current_sum) #recursively search the left subtree
+            paths += dfs_helper(node.right, current_sum) #recursively search the right subtree
+
+            #backtrack: done proccessing the current node -> decrement the count of the current sum
+            sums[current_sum] -= 1
+
+            return paths #return the total number of valid paths found starting from this node
+        
+        #start the DFS search from the root node with an initial cumulative sum of 0
+        return dfs_helper(root, 0)
