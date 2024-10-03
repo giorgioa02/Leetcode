@@ -1,0 +1,40 @@
+"""
+74. Search a 2D Matrix
+Binary Search
+"""
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        # Get matrix dimensions
+        ROWS, COLS = len(matrix), len(matrix[0])
+
+        # Binary search to find the potential row that may contain the target
+        top, bottom = 0, ROWS - 1
+        while top <= bottom:
+            mid_row = (top + bottom) // 2
+            # If target is larger than the last element in the current row, search below
+            if target > matrix[mid_row][-1]:
+                top = mid_row + 1
+            # If target is smaller than the first element in the current row, search above
+            elif target < matrix[mid_row][0]:
+                bottom = mid_row - 1
+            # Target is within the range of the current row
+            else: break
+
+        # If no valid row is found, return False
+        if not (top <= bottom): return False
+
+        # Binary search within the identified row
+        row = (top + bottom) // 2
+        left, right = 0, COLS - 1
+        while left <= right:
+            mid_col = (left + right) // 2
+            # If target is larger than mid element, search to the right
+            if target > matrix[row][mid_col]:
+                left = mid_col + 1
+            # If target is smaller than mid element, search to the left
+            elif target < matrix[row][mid_col]:
+                right = mid_col - 1
+            else: return True # Target found
+
+        return False # Return False if target not found in the matrix
