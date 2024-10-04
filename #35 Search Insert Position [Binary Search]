@@ -1,0 +1,22 @@
+"""
+35. Search Insert Position
+Binary Search
+"""
+
+class Solution:
+    def searchInsert(self, nums: List[int], target: int) -> int:
+        # Initialize pointers to the start (left) and end (right) of the arra
+        left, right = 0, len(nums) - 1
+
+        # Binary Search (basic alg): 
+        while left <= right:
+            mid = (left + right) // 2   # Calculate the middle index of the array
+            if target == nums[mid]:
+                return mid              # Target found at the mid index
+            elif target > nums[mid]:
+                left = mid + 1          # Target is greater than midpoint, search the right half of array
+            else:
+                right = mid - 1         # Target is smaller than midpoint, search the left half of array (else == (if target < nums[mid]))
+        
+        return left # Return 'left' as the insertion point if the target is not found (helps handle edge cases)
+        # After the loop, 'left' will be at the position where the target would be inserted to maintain the sorted order       
