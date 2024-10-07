@@ -1,0 +1,33 @@
+"""
+34. Find First and Last Position of Element in Sorted Array
+Binary Search
+"""
+
+class Solution:
+    # Main function to find the starting and ending positions of the target in a sorted array
+    def searchRange(self, nums: List[int], target: int) -> List[int]:
+
+        left = self.binary_search(nums, target, True)   # Perform binary search to find the leftmost (first) index of the target
+        if left == -1: return [-1, -1]                  # Early return if the target is not found
+        right = self.binary_search(nums, target, False) # Perform binary search to find the rightmost (last) index of the target
+        return [left, right]                            # Return both the leftmost and rightmost positions as a list
+
+    # Helper function to perform a binary search with bias towards left or right
+    # left_bias: If True, find the leftmost index; if False, find the rightmost index
+    def binary_search(sself, nums: List[int], target: int, left_bias: bool) -> int:
+        l, r = 0, len(nums) - 1         # Initialize left (l) and right (r) pointers for binary search
+        i = -1                          # Variable to store the potential index of the target
+        while l <= r:                   # Continue searching while the left pointer is less than or equal to the right pointer
+            m = (l + r) // 2            # Find the middle index (m)
+            if target > nums[m]:        # If the target is greater than the middle element, move the left pointer to mid + 1
+                l = m + 1
+            elif target < nums[m]:      # If the target is smaller than the middle element, move the right pointer to mid - 1
+                r = m - 1
+            else:                       # If the target is found at the middle index
+                i = m                   # Store the index of the found target
+                # Modification to normal binary search for bias
+                if left_bias:           # If looking for the leftmost occurrence, move the right pointer to narrow the search
+                    r = m - 1           # Continue searching in the left half
+                else:                   # If looking for the rightmost occurrence, move the left pointer to narrow the search
+                    l = m + 1           # Continue searching in the right half
+        return i # Return the index of the target (or -1 if not found)
