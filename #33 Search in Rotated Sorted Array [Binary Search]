@@ -1,0 +1,38 @@
+"""
+#33 Search in Rotated Sorted Array
+Binary Search
+"""
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        # Initialize two pointers: 'left' starting at the beginning (index 0) and 'right' at the end (last index)
+        left, right = 0, len(nums) - 1
+
+        # Binary Search Alg: continue searching while the left pointer has not crossed the right pointer
+        while left <= right:
+            # Calculate the middle index
+            mid = (left + right) // 2
+            # If the middle element is the target, return its index.
+            if nums[mid] == target:
+                return mid
+            
+            # Check if the left portion of the array is sorted
+            # Left portion is sorted:
+            if nums[left] <= nums[mid]: 
+                # If target is within the sorted left portion (between nums[left] and nums[mid]), search the left side.
+                if nums[left] <= target < nums[mid]:
+                    right = mid - 1     # Move the 'right' pointer in front of 'mid', narrowing the search range to the left half.
+                else:  
+                    left = mid + 1      # Otherwise, target is not in the left portion, so search the right half by moving the 'left' pointer.
+
+            # If the left portion is not sorted, the right portion must be sorted.
+            # Right portion is sorted:       
+            else:
+                # If target is within the sorted right portion (between nums[mid] and nums[right]), search the right side.
+                if nums[mid] < target <= nums[right]:
+                    left = mid + 1      # Move the 'left' pointer to just after 'mid', narrowing the search range to the right half.
+                else:
+                    right = mid - 1     # Otherwise, target is not in the right portion, so search the left half by moving the 'right' pointer.
+        # If the target is not found, return -1   
+        return -1
+
