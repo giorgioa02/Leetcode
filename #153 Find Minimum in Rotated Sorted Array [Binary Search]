@@ -1,0 +1,23 @@
+"""
+153. Find Minimum in Rotated Sorted Array
+Binary Search
+"""
+
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        left, right = 0, len(nums) - 1 # Initialize two pointers, left and right, to the start and end of the array
+
+        # Perform binary search while left pointer is less than right pointer
+        while left < right: 
+            if nums[left] < nums[right]: return nums[left]  # If the array is sorted, return the leftmost element
+            mid = (left + right) // 2                       # Find the middle index of the current subarray
+
+            # Compare mid element with left to decide search space
+            # This means the left half is sorted, so the minimum must be in the right half
+            if nums[mid] >= nums[left]:
+                left = mid + 1  # Minimum must be in the right half
+            # Right half is unsorted
+            else: 
+                right = mid     # Minimum must be in the left half including mid
+        # When left == right, we've found the minimum
+        return nums[left] 
