@@ -1,0 +1,50 @@
+"""
+4. Median of Two Sorted Arrays
+Binary Search
+"""
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        A, B = nums1, nums2 # Assign the input arrays to A and B for easier handling
+        
+        total = len(nums1) + len(nums2) # Calculate the total length of the combined arrays
+        half = total // 2               # Calculate the half point for the binary search
+
+        # Ensure that A is the smaller array: this helps to minimize the number of elements we have to search
+        # Always perform binary search on the smaller array to reduce time complexity
+        if len(B) < len(A):
+            A, B = B, A
+
+        # Initialize the binary search boundaries for array A
+        left, right = 0, len(A) - 1  # 'left' is the start of the binary search, 'right' is the end
+
+
+        # Continue the binary search until the correct partition is found
+        while True:
+            # Find the partition indices for A and B: the partition divides the arrays into left and right parts
+            i = (left + right) // 2 # i is the partition index for A, calculated as the middle point between left and right
+            j = half - i - 2        # j is the corresponding partition index for B such that the left half contains exactly half of the total elements
+
+            # Set values for the elements just before and after the partition in both arrays
+            # These values will help in determining if the partition is correct
+
+            
+            A_left = A[i] if i >=0 else float("-infinity")              # A_left is the largest value on the left side of A: if i is out of bounds (i < 0), use negative infinity
+            A_right = A[i+1] if (i + 1) < len(A) else float("infinity") # A_right is the smallest value on the right side of A: if i + 1 is out of bounds (i + 1 >= len(A)), use positive infinity.
+            B_left = B[j] if j >=0 else float("-infinity")              # B_left is the largest value on the left side of B: if j is out of bounds (j < 0), use negative infinity.
+            B_right = B[j+1] if (j + 1) < len(B) else float("infinity") # B_right is the smallest value on the right side of B: if j + 1 is out of bounds (j + 1 >= len(B)), use positive infinity.
+            
+            # The partition is correct if the largest element on the left side is less than or equal to the smallest on the right side
+            if A_left <= B_right and B_left <= A_right:
+                # ODD: If the total number of elements is odd, the median is the minimum value of the right parts
+                if total % 2:
+                    return min(A_right, B_right)
+                # EVEN: If the total number of elements is even, the median is the average of the largest element of the left parts and the smallest element of the right parts
+                return (max(A_left, B_left) + min(A_right, B_right)) / 2
+
+            # If A_left is greater than B_right, it means we are too far right in A, so move the search boundary to the left
+            elif A_left > B_right: 
+                right = i - 1   # Reduce the right boundary of the binary search on A
+            # Otherwise, we are too far left in A, so move the search boundary to the right
+            else:
+                left = i + 1    # Increase the left boundary of the binary search on A
