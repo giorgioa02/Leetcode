@@ -1,0 +1,35 @@
+"""
+124. Binary Tree Maximum Path Sum
+Binary Search
+"""
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        # Initialize a global variable to track the maximum path sum found during the traversal
+        result = float("-inf")  # Ensures that any path sum will be larger, even if nodes are negative
+
+        # Define a helper function for depth-first search (DFS) traversal of the tree
+        # This function returns the maximum path sum of the subtree rooted at 'node'
+        def dfs(node):
+            nonlocal result         # Allows modification of the 'res' variable defined outside of the function
+            if not node: return 0   # Base case: if the current node is None, return 0 (no contribution to path sum)
+
+            # Recursively calculate the maximum path sum of the left and right subtrees
+            left_max = max(dfs(node.left), 0)   # Ignore negative path sums by taking max with 0
+            right_max = max(dfs(node.right), 0) # Ignore negative path sums by taking max with 0
+
+            # Update the global maximum path sum - this includes the current node's value and both left and right child paths (represents the possibility of splitting here)
+            result = max(result, node.val + left_max + right_max)
+            
+            # Return the maximum path sum without splitting at the current node
+            return node.val + max(left_max, right_max) # Will either include the left or the right subtree (whichever is larger) plus the node's value
+
+        dfs(root)       # Start the DFS traversal from the root of the binary tree
+        return result   # Return the maximum path sum found during the traversal
