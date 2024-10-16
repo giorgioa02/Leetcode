@@ -1,0 +1,54 @@
+"""
+200. Number of Islands
+Graph
+"""
+
+from collections import deque
+
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+
+        # Basic Input Validation:
+        if not grid: return 0 # Empty Check: return 0 if the input grid is empty
+        ROWS, COLS = len(grid), len(grid[0]) # Grid Dimensions: get the number of rows and columns in the grid
+        visited = set() # Vistied Set: set to keep track of visited land cells
+        islands = 0     # Island Count: variable to count the number of islands
+
+        # BFS Helper Function (requires iterative algorithm):
+        def bfs(r, c):
+            # Initialize the queue with the starting cell (r, c) and mark it as visited
+            queue = deque([(r,c)])  # Add row column position as a tuple
+            visited.add((r,c))      # Add row column position as a tuple
+        
+            # While queue is not empty (continue until there are no more cells to explore in this island):
+            while queue: 
+                # NOTE: This code allows for an easy conversion to DFS (iterative, non-recursive)
+                # Changing row, col = q.popLeft() to q.pop() (pop right, a 'regular pop'), will pop the most recent element we added instead of the first element
+
+                
+                row, col = queue.popleft()                  # Expand island: remove the current cell from the queue
+                directions = [[1,0], [-1,0], [0,1], [0,-1]] # List of possible directions to move (right, left, up, down)
+                
+                # Explore all four neighboring cells (adjacent positions) of poped island
+                for dr, dc in directions:
+                    # Calculate the row and column of the neighboring cell (for simplified computation)
+                    next_r, next_c = row + dr, col + dc
+
+                    if (0 <= next_r < ROWS and     # Check position is in bounds (horizontally)
+                        0 <= next_c < COLS and     # Check position is in bounds (vertically)
+                        grid[next_r][next_c] == '1' and     # Check that the position is a land position ('1')
+                        (next_r, next_c) not in visited):   # Check position has not already been visited 
+                            #If valid, add the cell to the queue and mark it as visited
+                            queue.append((next_r, next_c))
+                            visited.add((next_r, next_c))
+
+        # Visit every position in grid: iterate through all cells in the grid
+        for r in range(ROWS):
+            for c in range (COLS):
+                # If the current cell is land ('1') and has not been visited, it's a new island
+                if grid[r][c] == '1' and (r,c) not in visited:
+                    bfs(r, c) # Perform BFS to mark the entire island as visited
+                    islands += 1 # Increment the island count
+        
+        # Return the total number of islands found
+        return islands
