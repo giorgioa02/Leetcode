@@ -1,0 +1,41 @@
+"""
+207. Course Schedule
+Graph
+"""
+
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        # Map each course to its list of prerequisites (initially empty for all courses)
+        course_prereq_Map = {course: [] for course in range(numCourses)}
+        # Populate the map with the given prerequisites
+        for course, prereq in prerequisites:
+            course_prereq_Map[course].append(prereq)
+
+        # Set to track courses in the current DFS path (for cycle detection)
+        visited_path = set() 
+
+        # Helper function to perform DFS
+        def dfs(course):
+            # Base case 1: cycle detected if the course is already in the current path
+            if course in visited_path: return False #visiting a course twice: loop detected
+
+            # Base case 2: course has no prerequisites (is an empty list), it can be taken
+            if course_prereq_Map[course] == []: return True
+
+            # Add course to the current path set
+            visited_path.add(course)
+
+            # Recursively run DFS to check all prerequisites
+            for prereq in course_prereq_Map[course]:
+                #Run DFS on prereq
+                if not dfs(prereq): return False # If any prerequisite forms a cycle, automatically return False
+            
+           
+            visited_path.remove(course)     # Remove course from the path after checking all its prerequisites
+            course_prereq_Map[course] = []  # Mark course as processed by clearing its prerequisites (optimization)
+            return True # Course can be taken
+
+        # Check if all courses can be completed
+        for course in range(numCourses):
+            if not dfs(course): return False    # If any course leads to a cycle, return False
+        return True # All courses can be completed
