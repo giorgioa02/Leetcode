@@ -1,0 +1,51 @@
+"""
+994. Rotting Oranges
+Graph
+"""
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        # Get the dimensions of the grid
+        ROWS, COLS = len(grid), len(grid[0])
+        # Initialize the queue for BFS (to store positions of rotten oranges)
+        queue = deque()
+        # Initial variables: fresh (to count fresh oranges) and time (to count elapsed minutes)
+        fresh, time = 0, 0
+
+        
+        # Iterate over each cell in the grid to populate the initial state
+        for r in range(ROWS):
+            for c in range (COLS):
+                # Count the number of fresh oranges
+                if grid[r][c] == 1:
+                    fresh += 1
+                # Add the position of each rotten orange to the queue
+                if grid[r][c] == 2:
+                    queue.append((r,c))
+
+        # Early exit: check if there are no fresh oranges at the start, return 0 as no time is needed
+        if fresh == 0: return 0 
+
+        # Define the 4 possible directions for adjacent cells (right, left, down, up
+        directions = [[0,1], [0,-1], [1,0], [-1,0]]
+
+        # BFS loop: perform BFS until there are no more rotten oranges to process or no fresh oranges left
+        while queue and fresh > 0:
+            # Process all rotten oranges currently in the queue
+            for _ in range(len(queue)):
+                r, c = queue.popleft()  # Get the coordinates of the current rotten orange and pop it
+               # Check all 4 adjacent cells
+                for dr, dc in directions:
+                    row, col = dr + r, dc + c # Calculate the coordinates of the adjacent cell
+                    # If the adjacent cell is within bounds and contains a fresh orange
+                    if (0 <= row < ROWS and
+                        0 <= col < COLS and
+                        grid[row][col] == 1):
+                            grid[row][col] = 2          # Mark the fresh orange as rotten
+                            queue.append((row, col))    # Add it to the queue for the next round of processing
+                            fresh -= 1                  # Decrease the count of fresh oranges
+        
+            time += 1 # Increment the time after processing all rotten oranges at the current time step
+
+        # If no fresh oranges are left, return the time taken; otherwise, return -1 (not all oranges can rot)
+        return time if fresh == 0 else -1
