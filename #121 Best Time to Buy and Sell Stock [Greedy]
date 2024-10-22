@@ -1,0 +1,28 @@
+"""
+121. Best Time to Buy and Sell Stock
+Greedy
+"""
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        # Initialize two pointers:'left' represents the day we buy the stock (buy pointer) and 'right' represents the day we sell the stock (sell pointer)
+        left, right = 0, 1
+        # Initialize max_profit to 0, representing the initial profit state (no transactions made yet)
+        max_profit = 0
+
+        # Loop while 'right' is within the bounds of the prices array
+        while right < len(prices):
+            # Check if transaction is profitable: the price at the 'left' index (buy price) is less than the price at the 'right' index (sell price)
+            if prices[left] < prices[right]:
+                # Calculate the profit by subtracting the buy price (prices[left]) from the sell price (prices[right])
+                # Update max_profit if this newly calculated profit is higher than the current max_profit
+                max_profit = max(max_profit, prices[right] - prices [left])
+            # Transaction is not profitable
+            else:
+                # Move the 'left' pointer to the 'right' pointer's position to find a new potential buy price
+                left = right
+            # Increment the 'right' pointer to check the next day's price as the potential sell price
+            right += 1
+        
+        # Return the maximum profit found; if no profit was possible, this will return 0
+        return max_profit
