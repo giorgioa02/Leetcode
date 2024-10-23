@@ -1,0 +1,30 @@
+"""
+763. Partition Labels
+Greedy
+"""
+
+class Solution:
+    def partitionLabels(self, s: str) -> List[int]:
+        '''Preprocessing'''
+        # Build a hashmap to store the last occurrence of each character in the string
+        last_index = {}
+        # Populate the hashmap with the last index of each character in the string
+        for i, c in enumerate(s):   # Enumerate: returns both the index (i) and the character (c) while iterating over the string
+            last_index[c] = i       # Update the hashmap with the latest index for each character
+
+        '''Algorithm'''
+        result = [] # Initialize the result list to store the sizes of each partition
+        partition_length, partition_end = 0, 0 # Initialize variables for partition length and end of the current partition
+        
+        # Iterate through the string again to determine the partitions
+        for i, c in enumerate(s):
+            partition_length += 1                               # Increment the length of the current partition
+            partition_end = max(partition_end, last_index[c])   # Update the end of the current partition if necessary
+
+            # If the current index reaches the end of the partition, stop
+            if i == partition_end:
+                result.append(partition_length)     # Add the current partition length to the result list
+                partition_length = 0                # Reset the partition length for the next partition
+
+        # Return the list of partition sizes
+        return result 
