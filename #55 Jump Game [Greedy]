@@ -1,0 +1,24 @@
+"""
+55. Jump Game
+Greedy
+"""
+
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        # Initialize 'goal' as the last index of the array (the position we want to be able to reach)
+        goal = len(nums) - 1
+
+        # Iterate backwards through the array starting from the last index (len(nums) - 1) to the first index (0)
+        # The range 'len(nums) - 1, -1, -1' is used to set the start, stop, and step values for the loop:
+            # 'len(nums) - 1' is the last index of the array
+            # '-1' as the stop value indicates the loop continues until it reaches index 0 (inclusive)
+            # The step value of '-1' means the loop moves backwards, decrementing by 1 on each iteration.
+        for i in range(len(nums)-1, -1, -1):
+            # Get the maximum jump length from the current position 'i'
+            jump_length = nums[i]
+            # If index 'i' can reach or exceed 'goal', update 'goal' to 'i'
+            if i + jump_length >= goal: 
+                goal = i
+        
+        # Return True if 'goal' is the first index, else False
+        return True if goal == 0 else False
